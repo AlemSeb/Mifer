@@ -1,23 +1,6 @@
-"use client"
+import type { Vehicle, Shipment, Driver, Client, Invoice } from "@/types"
 
-import { useState } from "react"
-import { BarChart3, Truck, Package, Users, User, Route, FileText, TrendingUp } from "lucide-react"
-import { useTheme } from "@/hooks/useTheme"
-import { Sidebar } from "@/components/layout/sidebar"
-import { Header } from "@/components/layout/header"
-import { SettingsModal } from "@/components/layout/settings-modal"
-import { DashboardModule } from "@/components/modules/dashboard"
-import { FleetModule } from "@/components/modules/fleet"
-import { ShipmentsModule } from "@/components/modules/shipments"
-import { DriversModule } from "@/components/modules/drivers"
-import { ClientsModule } from "@/components/modules/clients"
-import { RoutesModule } from "@/components/modules/routes"
-import { BillingModule } from "@/components/modules/billing"
-import { ReportsModule } from "@/components/modules/reports"
-import type { Module } from "@/types"
-
-// Mock data para empresa de transporte
-const mockVehicles = [
+export const mockVehicles: Vehicle[] = [
   {
     id: 1,
     placa: "ABC-123",
@@ -59,7 +42,7 @@ const mockVehicles = [
   },
 ]
 
-const mockShipments = [
+export const mockShipments: Shipment[] = [
   {
     id: "ENV-001",
     cliente: "Minera del Sur SAC",
@@ -142,7 +125,7 @@ const mockShipments = [
   },
 ]
 
-const mockDrivers = [
+export const mockDrivers: Driver[] = [
   {
     id: 1,
     nombre: "Juan Pérez Rodríguez",
@@ -181,7 +164,7 @@ const mockDrivers = [
   },
 ]
 
-const mockClients = [
+export const mockClients: Client[] = [
   {
     id: 1,
     razonSocial: "Minera del Sur SAC",
@@ -220,7 +203,7 @@ const mockClients = [
   },
 ]
 
-const mockInvoices = [
+export const mockInvoices: Invoice[] = [
   {
     id: 1,
     numero: "F001-00001",
@@ -248,94 +231,3 @@ const mockInvoices = [
     estado: "Emitida",
   },
 ]
-
-export default function MiferERP() {
-  const [activeModule, setActiveModule] = useState("dashboard")
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [showSettings, setShowSettings] = useState(false)
-  const { theme, setTheme, mounted } = useTheme()
-
-  const modules: Module[] = [
-    { id: "dashboard", name: "Dashboard", icon: BarChart3 },
-    { id: "fleet", name: "Flota", icon: Truck },
-    { id: "shipments", name: "Envíos", icon: Package },
-    { id: "drivers", name: "Conductores", icon: User },
-    { id: "clients", name: "Clientes", icon: Users },
-    { id: "routes", name: "Rutas", icon: Route },
-    { id: "billing", name: "Facturación", icon: FileText },
-    { id: "reports", name: "Reportes", icon: TrendingUp },
-  ]
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "Disponible":
-      case "Activo":
-      case "Entregado":
-        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
-      case "En Ruta":
-      case "En Tránsito":
-      case "Programado":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"
-      case "Mantenimiento":
-      case "Descanso":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
-      case "Fuera de Servicio":
-      case "Inactivo":
-        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
-      default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300"
-    }
-  }
-
-  const renderModule = () => {
-    switch (activeModule) {
-      case "dashboard":
-        return <DashboardModule />
-      case "fleet":
-        return <FleetModule />
-      case "shipments":
-        return <ShipmentsModule />
-      case "drivers":
-        return <DriversModule />
-      case "clients":
-        return <ClientsModule />
-      case "routes":
-        return <RoutesModule />
-      case "billing":
-        return <BillingModule />
-      case "reports":
-        return <ReportsModule />
-      default:
-        return <DashboardModule />
-    }
-  }
-
-  if (!mounted) {
-    return null
-  }
-
-  return (
-    <div className="flex h-screen bg-background transition-colors duration-300">
-      <Sidebar
-        modules={modules}
-        activeModule={activeModule}
-        setActiveModule={setActiveModule}
-        sidebarOpen={sidebarOpen}
-        setSidebarOpen={setSidebarOpen}
-      />
-
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Header
-          modules={modules}
-          activeModule={activeModule}
-          setSidebarOpen={setSidebarOpen}
-          setShowSettings={setShowSettings}
-        />
-
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-6">{renderModule()}</main>
-      </div>
-
-      <SettingsModal showSettings={showSettings} setShowSettings={setShowSettings} theme={theme} setTheme={setTheme} />
-    </div>
-  )
-}
